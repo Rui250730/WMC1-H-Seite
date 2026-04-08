@@ -1,1 +1,104 @@
+const students = [
+    {
+        id: 1,
+        name: "Lukas Huber",
+        alter: 28,
+        groesse: 182,
+        geburtsdatum: "1997-05-12",
+        herkunft: "Österreich",
+        gewicht: 78.5,
+        note: 1,
+    },
+    {
+        id: 2,
+        name: "Sarah Meyer",
+        alter: 34,
+        groesse: 165,
+        geburtsdatum: "1991-11-20",
+        herkunft: "Deutschland",
+        gewicht: 62.0,
+        note: 5,
+    },
+    {
+        id: 3,
+        name: "Mateo Rossi",
+        alter: 19,
+        groesse: 175,
+        geburtsdatum: "2006-02-28",
+        herkunft: "Italien",
+        gewicht: 70.2,
+        note: 4,
+    },
+    {
+        id: 4,
+        name: "Elena Fischer",
+        alter: 45,
+        groesse: 170,
+        geburtsdatum: "1980-08-05",
+        herkunft: "Schweiz",
+        gewicht: 65.8,
+        note: 2,
+    },
+    {
+        id: 5,
+        name: "Julian Novak",
+        alter: 22,
+        groesse: 190,
+        geburtsdatum: "2003-12-15",
+        herkunft: "Österreich",
+        gewicht: 85.3,
+        note: 3,
+    },
+    {
+        id: 6,
+        name: "Sophie Dubois",
+        alter: 31,
+        groesse: 168,
+        geburtsdatum: "1994-03-10",
+        herkunft: "Frankreich",
+        gewicht: 59.5,
+        note: 1,
+    },
+    {
+        id: 7,
+        name: "Erik Lindström",
+        alter: 52,
+        groesse: 185,
+        geburtsdatum: "1973-10-22",
+        herkunft: "Schweden",
+        gewicht: 92.1,
+        note: 5,
+    },
+];
+
+//Task 1
+const passed = students.filter((student) => student.note <= 4);
+
+console.log(passed);
+
+//Task 2
+const labels = students.map((student) => `${student.name} (${student.alter})`);
+
+console.log(labels);
+
+//Task 3
+const passedNames = students
+    .filter((student) => student.note <= 4)
+    .map((student) => student.name);
+
+console.log(passedNames);
+
+//Task 4
+const averageGrade =
+    students.reduce((sum, student) => sum + student.note, 0) / students.length;
+
+console.log(averageGrade);
+
+//Task 5
+const result = students
+    .filter((student) => student.alter >= 17 && student.note <= 4)
+    .map((student) => student.name)
+    .join(", ");
+
+console.log(result);
 
