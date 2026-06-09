@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIM::BENCH</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .loading-dot {
+      display: inline-block;
+      animation: blink 1s infinite;
+      color: var(--neon-cyan);
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: -1rem;
+    }
+    .divider {
+      width: 260px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body>
+
+<div class="home-wrapper">
+
+  <!-- Logo -->
+  <div>
+    <div class="logo">AIM<span>::</span>BENCH</div>
+    <div class="subtitle">Reaktionstest&nbsp;&nbsp;v1.0</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Quote via fetch -->
+  <div class="quote-box" id="quoteBox">
+    <span class="loading-dot">■</span> Lade Zitat…
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Level cards -->
+  <div class="level-grid" id="levelGrid">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- Highscores -->
+  <div class="highscore-bar" id="highscoreBar">
+    <!-- filled by JS -->
+  </div>
+
+</div>
+
+<script src="js/game.js"></script>
+<script>
+// ── Level definitions ────────────────────────
+const LEVELS = [
+  {
+    num: 1,
+    name: 'AIM',
+    desc: 'Klicke die wachsenden Kreise bevor sie verschwinden.',
+    goal: 'ZIEL: 50 TREFFER',
+    file: 'level1.html'
+  },
+  {
+    num: 2,
+    name: 'TYPE',
+    desc: 'Drücke den angezeigten Buchstaben auf der Tastatur.',
+    goal: 'ZIEL: 30 TREFFER',
+    file: 'level2.html'
+  },
+  {
+    num: 3,
+    name: 'FOCUS',
+    desc: 'Hover über den Kreis UND drücke gleichzeitig den richtigen Buchstaben.',
+    goal: 'ZIEL: 30 TREFFER',
+    file: 'level3.html'
+  }
+];
+
+// ── Render level cards ────────────────────────
+function renderLevelGrid() {
+  const unlocked = getUnlocked();
+  const scores   = getHighScores();
+  const grid     = document.getElementById('levelGrid');
+  grid.innerHTML = '';
+
+  LEVELS.forEach(lvl => {
+    const isUnlocked = unlocked.includes(lvl.num);
+    const card = document.createElement('a');
+    card.href      = isUnlocked ? lvl.file : '#';
+    card.className = 'level-card' + (isUnlocked ? '' : ' locked');
+    card.innerHTML = `
+      <span class="level-num">0${lvl.num}</span>
+      <div class="level-name">${lvl.name}</div>
+      <div class="level-desc">${lvl.desc}</div>
+      <div class="level-goal">${isUnlocked ? lvl.goal : '🔒 GESPERRT'}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── Render highscores ─────────────────────────
+function renderHighscores() {
+  const scores = getHighScores();
+  const bar    = document.getElementById('highscoreBar');
+  const items  = LEVELS.map(l =>
+    `LVL${l.num} <span>${scores[l.num] ?? '—'}</span>`
+  );
+  bar.innerHTML = 'HIGHSCORES: &nbsp; ' + items.join(' &nbsp;|&nbsp; ');
+}
+
+// ── Fetch quote ───────────────────────────────
+async function loadQuote() {
+  const box = document.getElementById('quoteBox');
+
+  const data = await fetchLetterPool(); // from game.js – also returns quote
+
+  if (data && data.content) {
+    box.innerHTML = `
+      <div class="quote-text">"${data.content}"</div>
+      <div class="quote-author">— ${data.author}</div>
+    `;
+  } else {
+    box.innerHTML = `<div class="quote-text">"Precision is not an accident."</div>
+                     <div class="quote-author">— Unknown</div>`;
+  }
+}
+
+// ── Init ──────────────────────────────────────
+renderLevelGrid();
+renderHighscores();
+loadQuote();
+</script>
+
+</body>
+</html>
